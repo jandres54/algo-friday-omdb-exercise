@@ -21,7 +21,7 @@ export default function MoviePage() {
       setLoading(false)
     };
     getDefaultMovies()
-  }, [])
+  }, [API_KEY])
   
   const getMovies = async () => {
     setLoading(true)
@@ -30,20 +30,20 @@ export default function MoviePage() {
     });
     const parsedData = await response.json();
     if (parsedData) {
-      setMovies(parsedData);
+      setMovies(parsedData.Search);
     } else {
       setMovies([])
     }
     setLoading(false);
   };
-  
+  console.log(API_KEY)
   return (
     <div className="main-page-content">
       <h1 className="main-header">Moviflix</h1>
       <h3 className="sub-header">User, try searching for any Movie</h3>
       <Form className="search-form"
-        onChange={(e) => {
-          e.preventdefault()
+        onSubmit={(e) => {
+          e.preventDefault()
           getMovies()
         }}>
         <InputGroup className="mb-3">
@@ -51,11 +51,11 @@ export default function MoviePage() {
             placeholder="Search Movies"
             aria-label="Search Movies"
             onChange={(e) => setSearch(e.target.value)}
-            value={setSearch}
+            value={search}
             required
             />
           <InputGroup.Append>
-            <Button type="" variant="secondary">
+            <Button type="submit" variant="secondary">
               Search
               </Button>
           </InputGroup.Append>
@@ -64,7 +64,7 @@ export default function MoviePage() {
       {
         !movies ?
           <NoMoviesFound /> :
-          ( !loading ? 
+          ( loading ? 
             (
               <Loader />
             ) : (
@@ -79,7 +79,7 @@ export default function MoviePage() {
                       lg={3}
                       className="mb-4"
                     >
-                      <MovieCard movies={movie} />
+                      <MovieCard movie={movie} />
                     </Col>
                   );
                 })}
